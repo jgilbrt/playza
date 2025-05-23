@@ -1,0 +1,41 @@
+<div>
+  <h1 class="font-bold text-4xl">Matches#show</h1>
+  <p>Find me in app/views/matches/show.html.erb</p>
+</div>
+
+<h2>Match vs <%= @match.opponent_name %> on <%= @match.date.strftime('%b %d, %Y') %></h2>
+
+<h3>Players</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Status</th>
+      <th>Role</th>
+      <th>Goals</th>
+      <th>Assists</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @match_players.each do |mp| %>
+      <tr>
+        <td><%= mp.user.email %></td>
+        <td><%= mp.status %></td>
+        <td><%= mp.role %></td>
+        <td><%= mp.goals_scored %></td>
+        <td><%= mp.assists %></td>
+        <td>
+          <%# Form to update player (status, role, goals, assists) %>
+          <%= form_with model: [@match, mp], method: :patch, local: true do |f| %>
+            <%= f.select :status, options_for_select(['confirmed', 'pending', 'declined'], mp.status) %>
+            <%= f.text_field :role, placeholder: "Role" %>
+            <%= f.number_field :goals_scored, min: 0 %>
+            <%= f.number_field :assists, min: 0 %>
+            <%= f.submit "Update" %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

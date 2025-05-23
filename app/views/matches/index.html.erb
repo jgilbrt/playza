@@ -1,0 +1,32 @@
+<h1 class="mb-4">MatchHub</h1>
+
+<% @matches_by_season.each do |season, matches| %>
+  <h2 class="mb-3">Season: <%= season.presence || "Unspecified" %></h2>
+
+  <div class="row g-4 mb-5">
+    <% matches.each do |match| %>
+      <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">
+              <%= match.team.name %> vs <%= match.opponent_name %>
+            </h5>
+            <p class="card-text">
+              Date: <%= match.date.strftime("%b %d, %Y %H:%M") if match.date %><br>
+              Location: <%= match.location %><br>
+              Score: <%= match.score_own || 0 %> - <%= match.score_opponent || 0 %>
+            </p>
+            <%= link_to "View Match", match_path(match), class: "btn btn-success" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<%= link_to "Add New Match", new_match_path, class: "btn btn-primary mt-4" %>
+
+<div class="mb-4">
+  <%= button_to "End Current Season", end_season_matches_path, method: :post, class: "btn btn-warning me-2" %>
+  <%= button_to "Start New Season", start_new_season_matches_path, method: :post, class: "btn btn-primary" %>
+</div>

@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  match: one
+  user: one
+  award_type: MyString
+
+two:
+  match: two
+  user: two
+  award_type: MyString

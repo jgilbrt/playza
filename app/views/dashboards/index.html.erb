@@ -1,0 +1,85 @@
+<div class="p-6 max-w-7xl mx-auto space-y-6">
+
+  <!-- Row 1, Col 1 -->
+  <div class="bg-white rounded shadow p-4 mb-4">
+    <h2 class="fs-4 fw-semibold mb-2">Hello Manager!</h2>
+    <% if @next_match %>
+      <p class="mb-1">
+        Your next match is in <span class="fw-bold"><%= distance_of_time_in_words(Date.today, @next_match.date) %></span>
+        vs <span class="fw-bold"><%= @next_match.opponent_name %></span>.
+      </p>
+    <% else %>
+      <p>No upcoming matches scheduled.</p>
+    <% end %>
+
+    <p class="mb-3">
+      You currently have <span class="fw-bold"><%= current_user.team.users.count %></span> players.
+    </p>
+    <%= link_to "Go to MatchHub", matches_path, class: "btn btn-success rounded-pill fw-semibold px-4 py-2" %>
+  </div>
+
+  <!-- Row 2: 3 Columns -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+<!-- Col 1: Last Match -->
+<div class="bg-white rounded shadow p-4 mb-4">
+  <h3 class="fs-5 fw-semibold mb-3">Last Match</h3>
+  <% if @last_match %>
+    <% if @last_match.score_own && @last_match.score_opponent %>
+      <% result = if @last_match.score_own > @last_match.score_opponent
+                    "beat"
+                  elsif @last_match.score_own == @last_match.score_opponent
+                    "drew with"
+                  else
+                    "lost to"
+                  end %>
+      <p>
+        You <span class="fw-bold text-<%= result == 'beat' ? 'success' : 'danger' %>"><%= result %></span>
+        <%= @last_match.opponent_name %> by <span class="fw-bold"><%= @last_match.score_own %>-<%= @last_match.score_opponent %></span>
+      </p>
+    <% else %>
+      <p>Score not available yet for the last match vs <%= @last_match.opponent_name %>.</p>
+    <% end %>
+
+    <p>Dick of the Day: <span class="fw-bold"><%= @last_match.awards.find_by(award_type: "dotd")&.user&.email || "N/A" %></span></p>
+    <p>Player of the Match: <span class="fw-bold"><%= @last_match.awards.find_by(award_type: "potm")&.user&.email || "N/A" %></span></p>
+
+    <p class="mt-3 fw-semibold">Payment Summary:</p>
+    <p><%= @paid_count %> paid, <%= @unpaid_count %> unpaid</p>
+    <%= link_to "View Match", match_path(@last_match), class: "btn btn-success rounded-pill fw-semibold mt-3 px-4 py-2" %>
+  <% else %>
+    <p>No matches played yet.</p>
+  <% end %>
+</div>
+
+    <!-- Col 2: Overview -->
+    <div class="bg-white rounded shadow p-4 mb-4">
+      <h3 class="fs-5 fw-semibold mb-3">Overview</h3>
+      <ul class="ps-3 mb-0">
+        <li>Wins: <span class="fw-bold"><%= @wins %></span></li>
+        <li>Draws: <span class="fw-bold"><%= @draws %></span></li>
+        <li>Losses: <span class="fw-bold"><%= @losses %></span></li>
+        <li>Goals scored: <span class="fw-bold"><%= @goals_scored %></span></li>
+        <li>Star Player (most POTMs): <span class="fw-bold"><%= @star_player&.email || "N/A" %></span></li>
+        <li>Top Scorer (most goals): <span class="fw-bold"><%= @top_scorer&.email || "N/A" %></span></li>
+        <li>Biggest Dick (most DOTDs): <span class="fw-bold"><%= @top_dick&.email || "N/A" %></span></li>
+      </ul>
+    </div>
+
+    <!-- Col 3: Wall of Shame -->
+    <div class="bg-white rounded shadow p-4 mb-4">
+      <h3 class="fs-5 fw-semibold mb-3">Wall of Shame</h3>
+      <% if @players_owing.any? %>
+        <ul class="ps-3 mb-3">
+          <% @players_owing.each do |player| %>
+            <li><%= player.email %> owes £<%= player.amount_owed %></li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>No outstanding payments.</p>
+      <% end %>
+      <%= link_to "Go to PaymentsHub", payments_path, class: "btn btn-danger rounded-pill fw-semibold px-4 py-2" %>
+    </div>
+
+  </div>
+</div>

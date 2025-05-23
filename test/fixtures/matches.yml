@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  team: one
+  opponent_name: MyString
+  date: 2025-05-23 22:31:46
+  location: MyString
+  score_own: 1
+  score_opponent: 1
+
+two:
+  team: two
+  opponent_name: MyString
+  date: 2025-05-23 22:31:46
+  location: MyString
+  score_own: 1
+  score_opponent: 1

@@ -1,0 +1,31 @@
+<h1>PaymentsHub</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Player</th>
+      <th>Amount</th>
+      <th>Status</th>
+      <th>Note</th>
+      <th>Date</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @payments.each do |payment| %>
+      <tr>
+        <td><%= payment.user.email %></td>
+        <td><%= number_to_currency(payment.amount) %></td>
+        <td><%= payment.status %></td>
+        <td><%= payment.note %></td>
+        <td><%= payment.created_at.strftime("%b %d, %Y") %></td>
+        <td>
+          <%= link_to "Edit", edit_payment_path(payment), class: "btn btn-sm btn-outline-secondary" %>
+          <%= link_to "Delete", payment_path(payment), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Add Payment", new_payment_path, class: "btn btn-primary mt-3" %>
