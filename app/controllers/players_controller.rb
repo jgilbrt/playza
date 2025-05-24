@@ -1,12 +1,18 @@
 class PlayersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_team
+before_action :set_team, only: [:index, :new, :create]
 before_action :set_player, only: [:show]
 
-  def index
-    @players = @team.users.order(:email) # or any order you want
-    @users = User.all
+def index
+  if current_user.team
+    @players = current_user.team.users.where(role: 'player')
+    @payments = Payment.where(user: current_user.team.users).includes(:user)
+  else
+    @players = []
+    @payments = []
   end
+end
+
 
   def show
     # Player stats and payment history
@@ -26,6 +32,20 @@ before_action :set_player, only: [:show]
 
   end
 
+def add
+  user = User.find_by(email: params[:email])
+
+  if user && user.role == "player"
+    user.update(team: current_user.team)
+    flash[:notice] = "#{user.email} added to your team!"
+  else
+    flash[:alert] = "User not found or not a player"
+  end
+
+  redirect_to players_path
+end
+
+
   def notify
     # Custom action where manager can send a notification message to player
     # You can implement email or in-app notification here
@@ -41,13 +61,38 @@ before_action :set_player, only: [:show]
     redirect_to player_path(@player)
   end
 
+def new
+  @player = Player.new
+  @users = User.all  # Or fetch users with some search logic if needed
+end
+
+
+
+  def create
+    @player = @team.users.build(player_params)
+    @player.role = "player"
+
+    if @player.save
+      redirect_to team_players_path(@team), notice: "Player added!"
+    else
+      render :new
+    end
+  end
+
   private
 
-  def set_team
-    @team = current_user.team
-  end
+def set_team
+  @team = Team.find(params[:team_id]) if params[:team_id]
+end
 
   def set_player
     @player = @team.users.find(params[:id])
   end
+
+    def player_params
+params.require(:user).permit(:email, :password, :password_confirmation, :name, :position, :avatar)
+  end
+
+
+
 end

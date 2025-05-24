@@ -1,43 +1,84 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<h2 class="mb-4">Edit <%= resource_name.to_s.humanize %></h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true, class: "needs-validation" }) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+  <!-- Accordion wrapper -->
+  <div class="accordion mb-4" id="editUserAccordion">
+
+    <!-- Change Email Section -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingEmail">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEmail" aria-expanded="false" aria-controls="collapseEmail">
+          Change Email
+        </button>
+      </h2>
+      <div id="collapseEmail" class="accordion-collapse collapse" aria-labelledby="headingEmail" data-bs-parent="#editUserAccordion">
+        <div class="accordion-body">
+          <div class="mb-3">
+            <%= f.input :email, required: true, autofocus: true, input_html: { autocomplete: "email", class: "form-control" }, label_html: { class: "form-label" }, wrapper: :default %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Change Avatar Section -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingAvatar">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAvatar" aria-expanded="false" aria-controls="collapseAvatar">
+          Change Avatar
+        </button>
+      </h2>
+      <div id="collapseAvatar" class="accordion-collapse collapse" aria-labelledby="headingAvatar" data-bs-parent="#editUserAccordion">
+        <div class="accordion-body">
+          <div class="mb-3">
+            <%= label_tag "team_avatar", "Team Avatar", class: "form-label" %>
+              <%= f.fields_for :team do |team_fields| %>
+                <%= team_fields.label :avatar, "Team Avatar", class: "form-label" %>
+                <%= team_fields.file_field :avatar, class: "form-control" %>
+                <% if resource.team.avatar.attached? %>
+                  <%= image_tag resource.team.avatar.variant(resize_to_limit: [100, 100]), class: "img-thumbnail mt-2" %>
+                <% end %>
+              <% end %>
+            <% if @team.avatar.attached? %>
+              <%= image_tag @team.avatar.variant(resize_to_limit: [100, 100]), class: "img-thumbnail mt-2" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Change Password Section -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingPassword">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePassword" aria-expanded="false" aria-controls="collapsePassword">
+          Change Password
+        </button>
+      </h2>
+      <div id="collapsePassword" class="accordion-collapse collapse" aria-labelledby="headingPassword" data-bs-parent="#editUserAccordion">
+        <div class="accordion-body">
+          <div class="mb-3">
+            <%= f.input :password, required: false, hint: "(leave blank if you don't want to change it)", input_html: { autocomplete: "new-password", class: "form-control" }, label_html: { class: "form-label" }, wrapper: :default %>
+            <% if @minimum_password_length %>
+              <small class="form-text text-muted"><%= @minimum_password_length %> characters minimum</small>
+            <% end %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.input :password_confirmation, required: false, input_html: { autocomplete: "new-password", class: "form-control" }, label_html: { class: "form-label" }, wrapper: :default %>
+          </div>
+
+            <div class="mb-3">
+    <%= f.input :current_password, required: true, hint: "(we need your current password to confirm your changes)", input_html: { autocomplete: "current-password", class: "form-control" }, label_html: { class: "form-label" }, wrapper: :default %>
   </div>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-    <% if @minimum_password_length %>
-      <br />
-      <em><%= @minimum_password_length %> characters minimum</em>
-    <% end %>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Update" %>
+  <!-- Submit button -->
+  <div class="mb-3 text-end">
+    <%= f.button :submit, "Update", class: "btn btn-primary" %>
   </div>
 <% end %>
-
-<h3>Cancel my account</h3>
-
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
-
-<%= link_to "Back", :back %>

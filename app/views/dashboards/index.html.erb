@@ -2,7 +2,7 @@
 
   <!-- Row 1, Col 1 -->
   <div class="bg-white rounded shadow p-4 mb-4">
-    <h2 class="fs-4 fw-semibold mb-2">Hello Manager!</h2>
+    <h2 class="fs-4 fw-semibold mb-2">👋 Hello Manager!</h2>
     <% if @next_match %>
       <p class="mb-1">
         Your next match is in <span class="fw-bold"><%= distance_of_time_in_words(Date.today, @next_match.date) %></span>
@@ -21,7 +21,6 @@
   <!-- Row 2: 3 Columns -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-<!-- Col 1: Last Match -->
 <div class="bg-white rounded shadow p-4 mb-4">
   <h3 class="fs-5 fw-semibold mb-3">Last Match</h3>
   <% if @last_match %>
@@ -41,8 +40,27 @@
       <p>Score not available yet for the last match vs <%= @last_match.opponent_name %>.</p>
     <% end %>
 
-    <p>Dick of the Day: <span class="fw-bold"><%= @last_match.awards.find_by(award_type: "dotd")&.user&.email || "N/A" %></span></p>
-    <p>Player of the Match: <span class="fw-bold"><%= @last_match.awards.find_by(award_type: "potm")&.user&.email || "N/A" %></span></p>
+<p>
+  Dick of the Day:
+  <% dotd_user = @last_match.awards.find_by(award_type: "dotd")&.user %>
+  <% if dotd_user %>
+    <span class="fw-bold"><%= dotd_user.email %></span>
+  <% else %>
+    <span class="text-warning fw-semibold">Not assigned yet.</span>
+    <%= link_to "Spin now!", match_path(@last_match), class: "btn btn-sm btn-outline-warning ms-2" %>
+  <% end %>
+</p>
+
+<p>
+  Player of the Match:
+  <% potm_user = @last_match.awards.find_by(award_type: "potm")&.user %>
+  <% if potm_user %>
+    <span class="fw-bold"><%= potm_user.email %></span>
+  <% else %>
+    <span class="text-warning fw-semibold">Not assigned yet.</span>
+    <%= link_to "Assign now", match_path(@last_match), class: "btn btn-sm btn-outline-warning ms-2" %>
+  <% end %>
+</p>
 
     <p class="mt-3 fw-semibold">Payment Summary:</p>
     <p><%= @paid_count %> paid, <%= @unpaid_count %> unpaid</p>

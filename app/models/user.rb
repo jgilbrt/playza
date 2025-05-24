@@ -1,11 +1,15 @@
 class User < ApplicationRecord
+  scope :players, -> { where(role: 'player') }
   belongs_to :team, optional: true
 
   has_many :match_players
   has_many :matches, through: :match_players
-
+  has_one_attached :avatar
   has_many :awards
   has_many :payments
+
+  accepts_nested_attributes_for :team
+
 
     devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
@@ -45,6 +49,10 @@ def goals_scored
     else
       "Up to Date"
     end
+  end
+
+  def name
+    email
   end
 
 end

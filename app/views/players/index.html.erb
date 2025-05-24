@@ -1,17 +1,16 @@
 <h1 class="mb-4">Players</h1>
 
-<table class="table table-striped table-hover align-middle">
+<table class="table table-striped table-hover align-middle table-rounded-shadow">
   <thead class="table-dark">
     <tr>
       <th>Email</th>
-      <th>Role</th>
-      <th>Goals Scored</th>
-      <th>Appearances</th>
+      <th>Goals</th>
+      <th>Apps</th>
       <th>Assists</th>
-      <th>DOTD Count</th>
-      <th>POTM Count</th>
-      <th>Hangover Count</th>
-      <th>Payment Status</th>
+      <th>DOTDs</th>
+      <th>POTMs</th>
+      <th>Hangovers</th>
+      <th>Payments</th>
       <th class="text-center">Actions</th>
     </tr>
   </thead>
@@ -19,7 +18,6 @@
     <% @players.each do |player| %>
       <tr>
         <td><%= player.email %></td>
-        <td><%= player.role || "Player" %></td>
         <td><%= player.goals_scored || 0 %></td>
         <td><%= player.appearances || 0 %></td>
         <td><%= player.assists || 0 %></td>
@@ -29,11 +27,19 @@
         <td><%= player.payment_status || "Unknown" %></td>
         <td class="text-center">
           <%= link_to "Edit", edit_user_path(player), class: "btn btn-sm btn-outline-primary me-2" %>
-          <%= link_to "Chase", chase_payment_user_path(player), method: :post, class: "btn btn-sm btn-outline-warning" %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<%= link_to "Add New Player", new_user_path, class: "btn btn-primary mt-4" %>
+<%= link_to "Add New Player", new_player_path, class: "btn btn-primary mt-4" %>
+
+<style>
+.table-rounded-shadow {
+  border-radius: 12px !important;      /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  overflow: hidden;                    /* Clips inner content to border radius */
+  border: 1px solid #ddd;              /* Light border around the table */
+}
+</style>

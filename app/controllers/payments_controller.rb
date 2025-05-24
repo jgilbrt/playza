@@ -5,8 +5,12 @@ class PaymentsController < ApplicationController
 
   def index
     # List all payments for your team players, ordered by newest first
-    @payments = Payment.joins(:user).where(users: { team_id: @team.id }).order(created_at: :desc)
-  end
+    # @payments = Payment.joins(:user).where(users: { team_id: @team.id }).order(created_at: :desc)
+@players = current_user.team.users.where(role: 'player')
+@payments = Payment.where(user_id: @players).includes(:user).order(created_at: :desc)
+  @payment = Payment.new
+
+end
 
   def show
   end
@@ -15,14 +19,20 @@ class PaymentsController < ApplicationController
     @payment = Payment.new
   end
 
-  def create
-    @payment = Payment.new(payment_params)
-    if @payment.save
-      redirect_to payments_path, notice: 'Payment recorded successfully.'
-    else
-      render :new
-    end
+def create
+  @payment = Payment.new(payment_params)
+  @payment.team = current_user.team
+  @payment.status ||= "unpaid"  # default status if none given
+
+  if @payment.save
+    redirect_to payments_path, notice: 'Payment recorded successfully.'
+  else
+    @payments = current_user.team.payments.includes(:user)
+    @players = current_user.team.users.where(role: 'player')
+    render :index, status: :unprocessable_entity
   end
+end
+
 
   def edit
   end

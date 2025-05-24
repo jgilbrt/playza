@@ -70,3 +70,7 @@ group :test do
 end
 
 gem "devise", "~> 4.9"
+gem 'simple_form'
+gem 'cloudinary', '~> 1.21'
+gem 'activestorage-cloudinary-service'
+gem 'dotenv-rails'

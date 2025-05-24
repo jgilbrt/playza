@@ -1,32 +1,241 @@
-<h1 class="mb-4">MatchHub</h1>
+<div class="accordion" id="seasonsAccordion">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">MatchHub</h1>
 
-<% @matches_by_season.each do |season, matches| %>
-  <h2 class="mb-3">Season: <%= season.presence || "Unspecified" %></h2>
+    <div class="d-flex gap-3">
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newMatchModal">
+        Add New Match
+      </button>
 
-  <div class="row g-4 mb-5">
-    <% matches.each do |match| %>
-      <div class="col-md-6 col-lg-4">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title">
-              <%= match.team.name %> vs <%= match.opponent_name %>
-            </h5>
-            <p class="card-text">
-              Date: <%= match.date.strftime("%b %d, %Y %H:%M") if match.date %><br>
-              Location: <%= match.location %><br>
-              Score: <%= match.score_own || 0 %> - <%= match.score_opponent || 0 %>
-            </p>
-            <%= link_to "View Match", match_path(match), class: "btn btn-success" %>
-          </div>
+      <% if @can_start_new_season %>
+        <%= button_to "Start New Season", start_new_season_matches_path, method: :post, class: "btn btn-primary" %>
+      <% else %>
+        <button id="startSeasonBtn" type="button" class="btn btn-primary">
+          Start New Season
+        </button>
+      <% end %>
+    </div>
+  </div>
+
+  <% @matches_by_season.each_with_index do |(season, matches_hash), index| %>
+    <% next if season.blank? %>
+
+    <% has_future = matches_hash[:future].any? %>
+    <% has_past = matches_hash[:past].any? %>
+    <% is_active = has_future && has_past %>
+    <% is_upcoming = has_future && !has_past %>
+
+    <% badge_color, badge_label = if is_active
+      ['bg-success text-white', 'Active']
+    elsif is_upcoming
+      ['bg-warning text-dark', 'Upcoming']
+    else
+      ['bg-dark text-white', 'Past']
+    end %>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="heading<%= index %>">
+        <button
+          class="accordion-button <%= is_active ? '' : 'collapsed' %>"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapse<%= index %>"
+          aria-expanded="<%= is_active %>"
+          aria-controls="collapse<%= index %>"
+        >
+          <span class="badge rounded-pill me-2 <%= badge_color %>" style="font-size: 0.65rem; padding: 0.6em 0.6em; height: 1.2em; display: flex; align-items: center;">
+            <%= badge_label %>
+          </span>
+          Season: <%= season %>
+        </button>
+      </h2>
+
+      <div
+        id="collapse<%= index %>"
+        class="accordion-collapse collapse <%= is_active ? 'show' : '' %>"
+        aria-labelledby="heading<%= index %>"
+        data-bs-parent="#seasonsAccordion"
+      >
+        <div class="accordion-body">
+
+          <% if has_future %>
+            <h5 class="text-primary">Upcoming Matches</h5>
+            <div class="row g-4 mb-4">
+              <% matches_hash[:future].each do |match| %>
+                <div class="col-md-6 col-lg-4">
+                  <div class="card shadow-sm border-primary">
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        <%= match.team.name %> vs <%= match.opponent_name %>
+                      </h5>
+                      <p class="card-text">
+                        Date: <%= match.date.strftime("%b %d, %Y %H:%M") if match.date %><br>
+                        Location: <%= match.location %><br>
+                        <% if match.has_happened? %>
+                          Score: <%= match.score_own %> - <%= match.score_opponent %>
+                        <% else %>
+                          Score: TBD
+                        <% end %>
+                      </p>
+                      <%= link_to "View Match", match_path(match), class: "btn btn-success" %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
+          <% if has_past %>
+            <h5 class="text-muted">Past Matches</h5>
+            <div class="row g-4">
+              <% matches_hash[:past].each do |match| %>
+                <div class="col-md-6 col-lg-4">
+                  <div class="card shadow-sm bg-light">
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        <%= match.team.name %> vs <%= match.opponent_name %>
+                      </h5>
+                      <p class="card-text">
+                        Date: <%= match.date.strftime("%b %d, %Y %H:%M") if match.date %><br>
+                        Location: <%= match.location %><br>
+                        Score: <%= match.score_own || 0 %> - <%= match.score_opponent || 0 %>
+                      </p>
+                      <%= link_to "View Match", match_path(match), class: "btn btn-secondary" %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
         </div>
       </div>
-    <% end %>
-  </div>
-<% end %>
-
-<%= link_to "Add New Match", new_match_path, class: "btn btn-primary mt-4" %>
-
-<div class="mb-4">
-  <%= button_to "End Current Season", end_season_matches_path, method: :post, class: "btn btn-warning me-2" %>
-  <%= button_to "Start New Season", start_new_season_matches_path, method: :post, class: "btn btn-primary" %>
+    </div>
+  <% end %>
 </div>
+
+<!-- Add New Match Modal -->
+<div class="modal fade" id="newMatchModal" tabindex="-1" aria-labelledby="newMatchModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <%= form_with(model: Match.new, url: matches_path, local: true, id: "newMatchForm") do |f| %>
+        <div class="modal-header">
+          <h5 class="modal-title" id="newMatchModalLabel">Add New Match</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="mb-3 form-check">
+            <%= f.check_box :has_happened, { class: "form-check-input", id: "matchHappenedCheckbox" }, "true", "false" %>
+            <%= f.label :has_happened, "Match has happened?", class: "form-check-label", for: "matchHappenedCheckbox" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :opponent_name, "Opponent Team Name" %>
+            <%= f.text_field :opponent_name, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :date %>
+            <%= f.datetime_local_field :date, class: "form-control", required: true %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :location %>
+            <%= f.text_field :location, class: "form-control", required: true %>
+          </div>
+
+          <div id="happenedDetails" style="display:none;">
+            <div class="mb-3">
+              <%= f.label :score_own, "Your Team Score" %>
+              <%= f.number_field :score_own, class: "form-control", min: 0, value: 0, id: "scoreOwnInput" %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :score_opponent, "Opponent Score" %>
+              <%= f.number_field :score_opponent, class: "form-control", min: 0, value: 0 %>
+            </div>
+
+            <div id="scorersContainer" class="mb-3">
+              <label>Your Team Scorers</label>
+              <div id="scorersSelectors"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <%= f.submit "Create Match", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const checkbox = document.getElementById("matchHappenedCheckbox");
+    const happenedDetails = document.getElementById("happenedDetails");
+    const scoreInput = document.getElementById("scoreOwnInput");
+    const scorersSelectors = document.getElementById("scorersSelectors");
+
+    // Your team players passed from the Rails controller
+    const players = <%= raw(@team_players.to_json(only: [:id, :name, :email])) %>;
+
+    function updateScorerSelectors() {
+      const score = parseInt(scoreInput.value) || 0;
+      scorersSelectors.innerHTML = ""; // clear old dropdowns
+
+      for (let i = 0; i < score; i++) {
+        const div = document.createElement("div");
+        div.className = "mb-2";
+
+        const select = document.createElement("select");
+        select.name = `match[scorers_attributes][${i}][player_id]`;
+        select.className = "form-select";
+        select.required = true;
+
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "Select Scorer";
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        select.appendChild(defaultOption);
+
+        players.forEach(player => {
+          const option = document.createElement("option");
+          option.value = player.id;
+          option.textContent = `${player.name} (${player.email})`;
+          select.appendChild(option);
+        });
+
+        div.appendChild(select);
+        scorersSelectors.appendChild(div);
+      }
+    }
+
+    // Checkbox: Show/hide additional fields
+    checkbox.addEventListener("change", function () {
+      if (checkbox.checked) {
+        happenedDetails.style.display = "block";
+scoreInput.value = 1;
+scoreInput.dispatchEvent(new Event('input'));
+      } else {
+        happenedDetails.style.display = "none";
+        scorersSelectors.innerHTML = "";
+      }
+    });
+
+    // Score input: Add both input and change listeners for reliability
+    scoreInput.addEventListener("input", updateScorerSelectors);
+    scoreInput.addEventListener("change", updateScorerSelectors);
+
+    // Run on page load in case form was partially filled
+    if (checkbox.checked) {
+      happenedDetails.style.display = "block";
+      updateScorerSelectors();
+    } else {
+      happenedDetails.style.display = "none";
+    }
+  });
+</script>

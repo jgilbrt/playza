@@ -1,31 +1,91 @@
 <h1>PaymentsHub</h1>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Player</th>
-      <th>Amount</th>
-      <th>Status</th>
-      <th>Note</th>
-      <th>Date</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @payments.each do |payment| %>
+<turbo-frame id="payments_list">
+  <table class="table">
+    <thead>
       <tr>
-        <td><%= payment.user.email %></td>
-        <td><%= number_to_currency(payment.amount) %></td>
-        <td><%= payment.status %></td>
-        <td><%= payment.note %></td>
-        <td><%= payment.created_at.strftime("%b %d, %Y") %></td>
-        <td>
-          <%= link_to "Edit", edit_payment_path(payment), class: "btn btn-sm btn-outline-secondary" %>
-          <%= link_to "Delete", payment_path(payment), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger" %>
-        </td>
+        <th>Player</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Note</th>
+        <th>Date</th>
+        <th>Actions</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @payments.each do |payment| %>
+        <tr>
+          <td><%= payment.user.email %></td>
+          <td><%= number_to_currency(payment.amount) %></td>
+          <td><%= payment.status %></td>
+          <td><%= payment.note %></td>
+          <td><%= payment.created_at.strftime("%b %d, %Y") %></td>
+          <td>
+            <%= link_to "Edit", edit_payment_path(payment), class: "btn btn-sm btn-outline-secondary" %>
+            <%= link_to "Delete", payment_path(payment), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</turbo-frame>
 
-<%= link_to "Add Payment", new_payment_path, class: "btn btn-primary mt-3" %>
+<!-- Add Payment Button -->
+<button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addPaymentModal">
+  Add Payment
+</button>
+
+<!-- Add Payment Modal -->
+<div class="modal fade" id="addPaymentModal" tabindex="-1" aria-labelledby="addPaymentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+     <%= form_with model: @payment, url: payments_path, method: :post, data: { turbo_frame: "payments_list" }, local: true do |f| %>
+        <div class="modal-header">
+          <h5 class="modal-title" id="addPaymentModalLabel">Add Payment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Player Dropdown -->
+          <div class="mb-3">
+            <%= f.label :user_id, "Player" %>
+            <%= f.select :user_id, @players.map { |player| [player.email, player.id] }, {}, class: "form-select" %>
+          </div>
+
+          <!-- Amount -->
+          <div class="mb-3">
+            <%= f.label :amount, "Amount (£)" %>
+            <%= f.number_field :amount, step: 0.01, class: "form-control", required: true %>
+          </div>
+
+          <!-- Status -->
+          <div class="mb-3">
+            <%= f.label :status %>
+            <%= f.select :status, ['pending', 'paid'], {}, class: "form-select" %>
+          </div>
+
+          <!-- Note -->
+          <div class="mb-3">
+            <%= f.label :note %>
+            <%= f.text_field :note, class: "form-control" %>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <%= f.submit "Save Payment", class: "btn btn-primary" %>
+        </div>
+
+        <% if @payment.errors.any? %>
+  <div class="text-red-500">
+    <p><strong>There were errors saving the payment:</strong></p>
+    <ul>
+      <% @payment.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+      <% end %>
+    </div>
+  </div>
+</div>
