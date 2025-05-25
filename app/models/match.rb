@@ -18,8 +18,25 @@ def current_season
   session[:current_season] || "2024/2025"
 end
 
+def has_happened?
+  # match time plus 90 minutes
+  match_end_time = self.date + 90.minutes
+  Time.current >= match_end_time
+end
+
   def self.group_by_season
     all.group_by(&:season)  # group matches by their `season` attribute
   end
 
+def result
+    return "No result" if score_own.nil? || score_opponent.nil?
+
+    if score_own > score_opponent
+      "Won"
+    elsif score_own < score_opponent
+      "Lost"
+    else
+      "Draw"
+    end
+  end
 end

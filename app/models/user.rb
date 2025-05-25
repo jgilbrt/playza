@@ -22,34 +22,44 @@ def goals_scored
     match_players.sum(:goals_scored)
   end
 
+   def amount_owed
+    # Sum of unpaid payments amounts for this user
+    payments.where(status: 'unpaid').sum(:amount)
+  end
+
   def assists
     match_players.sum(:assists)
   end
 
-  def appearances
-    match_players.count
-  end
+  # app/models/user.rb
+def full_name
+  "#{first_name} #{last_name}".strip
+end
+
+
+def appearances
+  match_players.where(status: "confirmed").count
+end
 
   def dotd_count
-    awards.where(award_type: "DOTD").count
+awards.where("LOWER(award_type) = ?", "dotd").count
   end
 
   def potm_count
-    awards.where(award_type: "POTM").count
+awards.where("LOWER(award_type) = ?", "potm").count
   end
 
   def hangover_count
-    awards.where(award_type: "Hangover").count
+awards.where("LOWER(award_type) = ?", "hangover").count
   end
 
-  def payment_status
-    # Check if there are any payments with status 'pending' or 'owed'
-    if payments.where(status: 'pending').exists? || payments.where(status: 'owed').exists?
-      "Owes Money"
-    else
-      "Up to Date"
-    end
+def payment_status
+  if payments.where(status: 'unpaid').exists?
+    "Owes Money"
+  else
+    "Up to Date"
   end
+end
 
   def name
     email

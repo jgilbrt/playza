@@ -1,232 +1,1003 @@
 <head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/winwheel@2.7.0/Winwheel.min.js"></script>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- GSAP (for animations) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
+  <!-- Winwheel (for spinning wheel feature) -->
+  <script src="https://cdn.jsdelivr.net/npm/winwheel@2.7.0/Winwheel.min.js"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #e3eafc 0%, #f8f9fa 100%);
+      min-height: 100vh;
+    }
+    .card {
+      border-radius: 1.75rem !important;
+      box-shadow: 0 10px 40px 0 rgba(44, 62, 80, 0.18) !important;
+      border: none !important;
+      transition: box-shadow 0.2s;
+    }
+    .card:hover {
+      box-shadow: 0 16px 48px 0 rgba(44, 62, 80, 0.22) !important;
+    }
+    .card-header {
+      border-radius: 1.75rem 1.75rem 0 0 !important;
+      background: linear-gradient(90deg, #0d6efd 60%, #84b6f4 100%);
+      box-shadow: 0 2px 12px 0 rgba(13, 110, 253, 0.10);
+    }
+    .card-header.bg-light {
+      background: linear-gradient(90deg, #f8f9fa 60%, #e3eafc 100%) !important;
+      box-shadow: 0 2px 12px 0 rgba(44, 62, 80, 0.07);
+    }
+    .card-body {
+      border-radius: 0 0 1.75rem 1.75rem !important;
+      background: #fff;
+      box-shadow: 0 2px 12px 0 rgba(44, 62, 80, 0.04);
+    }
+    .shadow-xl {
+      box-shadow: 0 12px 48px rgba(44, 62, 80, 0.16) !important;
+    }
+    .shadow-pro {
+      box-shadow: 0 16px 64px 0 rgba(44, 62, 80, 0.22) !important;
+    }
+    .bg-gradient-info {
+      background: linear-gradient(90deg, #e3eafc 60%, #f8f9fa 100%) !important;
+    }
+    .rounded-4 {
+      border-radius: 2rem !important;
+    }
+    .rounded-3 {
+      border-radius: 1.25rem !important;
+    }
+    .rounded-pill {
+      border-radius: 2rem !important;
+    }
+    .display-3 {
+      font-size: 3rem;
+    }
+    .fs-4 {
+      font-size: 1.5rem !important;
+    }
+    .fs-5 {
+      font-size: 1.25rem !important;
+    }
+    .fw-bold {
+      font-weight: 700 !important;
+    }
+    .fw-semibold {
+      font-weight: 600 !important;
+    }
+    .bg-gradient {
+      background: #e3eafc !important;
+    }
+    .border-primary {
+      border-color: #0d6efd !important;
+    }
+    .border-success {
+      border-color: #198754 !important;
+    }
+    .border-danger {
+      border-color: #dc3545 !important;
+    }
+    .border-info {
+      border-color: #0dcaf0 !important;
+    }
+    .border-warning {
+      border-color: #ffc107 !important;
+    }
+    .border-secondary {
+      border-color: #6c757d !important;
+    }
+    .shadow-lg {
+      box-shadow: 0 8px 32px rgba(44, 62, 80, 0.15) !important;
+    }
+    .shadow-sm {
+      box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08) !important;
+    }
+    .shadow {
+      box-shadow: 0 1px 4px rgba(44, 62, 80, 0.06) !important;
+    }
+    .btn-lg {
+      font-size: 1.25rem;
+      padding: 0.75rem 2rem;
+    }
+    .form-select-lg {
+      font-size: 1.15rem;
+      padding: 0.75rem 1.25rem;
+    }
+    .form-control-lg {
+      font-size: 1.15rem;
+      padding: 0.75rem 1.25rem;
+    }
+    .modal-content {
+      border-radius: 2rem !important;
+      box-shadow: 0 12px 48px rgba(44, 62, 80, 0.18) !important;
+    }
+    .modal-header {
+      border-radius: 2rem 2rem 0 0 !important;
+    }
+    .modal-footer {
+      border-radius: 0 0 2rem 2rem !important;
+    }
+    .accordion-item {
+      border-radius: 2rem !important;
+    }
+    .accordion-body {
+      border-radius: 0 0 2rem 2rem !important;
+    }
+    .accordion-button {
+      border-radius: 2rem 2rem 0 0 !important;
+    }
+    .badge.bg-gradient-info {
+      background: #e3eafc !important;
+      color: #212529 !important;
+    }
+    .bg-primary {
+      background-color: #0d6efd !important;
+    }
+    .bg-light {
+      background-color: #f8f9fa !important;
+    }
+    .bg-white {
+      background-color: #fff !important;
+    }
+    .bg-success {
+      background-color: #198754 !important;
+    }
+    .bg-danger {
+      background-color: #dc3545 !important;
+    }
+    .bg-info {
+      background-color: #0dcaf0 !important;
+    }
+    .bg-warning {
+      background-color: #ffc107 !important;
+    }
+    .text-primary {
+      color: #0d6efd !important;
+    }
+    .text-secondary {
+      color: #6c757d !important;
+    }
+    .text-success {
+      color: #198754 !important;
+    }
+    .text-danger {
+      color: #dc3545 !important;
+    }
+    .text-info {
+      color: #0dcaf0 !important;
+    }
+    .text-warning {
+      color: #ffc107 !important;
+    }
+    .text-light {
+      color: #f8f9fa !important;
+    }
+    .text-dark {
+      color: #212529 !important;
+    }
+    .border-0 {
+      border: none !important;
+    }
+    .overflow-hidden {
+      overflow: hidden !important;
+    }
+    .gap-2 {
+      gap: 0.5rem !important;
+    }
+    .gap-3 {
+      gap: 1rem !important;
+    }
+    .gap-4 {
+      gap: 1.5rem !important;
+    }
+    .g-4 {
+      --bs-gutter-x: 1.5rem;
+      --bs-gutter-y: 1.5rem;
+    }
+    .lh-1 {
+      line-height: 1 !important;
+    }
+    .pb-3 {
+      padding-bottom: 1rem !important;
+    }
+    .pb-0 {
+      padding-bottom: 0 !important;
+    }
+    .pt-0 {
+      padding-top: 0 !important;
+    }
+    .pt-4 {
+      padding-top: 1.5rem !important;
+    }
+    .px-4 {
+      padding-left: 1.5rem !important;
+      padding-right: 1.5rem !important;
+    }
+    .px-5 {
+      padding-left: 3rem !important;
+      padding-right: 3rem !important;
+    }
+    .py-2 {
+      padding-top: 0.5rem !important;
+      padding-bottom: 0.5rem !important;
+    }
+    .py-3 {
+      padding-top: 1rem !important;
+      padding-bottom: 1rem !important;
+    }
+    .py-4 {
+      padding-top: 1.5rem !important;
+      padding-bottom: 1.5rem !important;
+    }
+    .py-5 {
+      padding-top: 3rem !important;
+      padding-bottom: 3rem !important;
+    }
+    .mb-0 {
+      margin-bottom: 0 !important;
+    }
+    .mb-1 {
+      margin-bottom: 0.25rem !important;
+    }
+    .mb-2 {
+      margin-bottom: 0.5rem !important;
+    }
+    .mb-3 {
+      margin-bottom: 1rem !important;
+    }
+    .mb-4 {
+      margin-bottom: 1.5rem !important;
+    }
+    .mb-5 {
+      margin-bottom: 3rem !important;
+    }
+    .mt-2 {
+      margin-top: 0.5rem !important;
+    }
+    .mt-3 {
+      margin-top: 1rem !important;
+    }
+    .mt-4 {
+      margin-top: 1.5rem !important;
+    }
+    .me-2 {
+      margin-right: 0.5rem !important;
+    }
+    .me-4 {
+      margin-right: 1.5rem !important;
+    }
+    .ms-2 {
+      margin-left: 0.5rem !important;
+    }
+    .ms-3 {
+      margin-left: 1rem !important;
+    }
+    .ms-4 {
+      margin-left: 1.5rem !important;
+    }
+    .align-middle {
+      vertical-align: middle !important;
+    }
+    .align-items-center {
+      align-items: center !important;
+    }
+    .d-flex {
+      display: flex !important;
+    }
+    .d-block {
+      display: block !important;
+    }
+    .justify-content-between {
+      justify-content: space-between !important;
+    }
+    .justify-content-end {
+      justify-content: flex-end !important;
+    }
+    .justify-content-center {
+      justify-content: center !important;
+    }
+    .flex-grow-1 {
+      flex-grow: 1 !important;
+    }
+    .border-start {
+      border-left: 4px solid #0d6efd !important;
+    }
+    .border-success {
+      border-color: #198754 !important;
+    }
+    .border-warning {
+      border-color: #ffc107 !important;
+    }
+    .border-primary {
+      border-color: #0d6efd !important;
+    }
+    .border-info {
+      border-color: #0dcaf0 !important;
+    }
+    .border-secondary {
+      border-color: #6c757d !important;
+    }
+    .border {
+      border: 1px solid #dee2e6 !important;
+    }
+    .rounded-top {
+      border-radius: 1.5rem 1.5rem 0 0 !important;
+    }
+    .rounded-bottom {
+      border-radius: 0 0 1.5rem 1.5rem !important;
+    }
+    .rounded-top-4 {
+      border-radius: 2rem 2rem 0 0 !important;
+    }
+    .rounded-bottom-4 {
+      border-radius: 0 0 2rem 2rem !important;
+    }
+    .overflow-hidden {
+      overflow: hidden !important;
+    }
+    .fs-3 {
+      font-size: 2rem !important;
+    }
+    .fs-6 {
+      font-size: 1rem !important;
+    }
+    .shadow {
+      box-shadow: 0 1px 4px rgba(44, 62, 80, 0.06) !important;
+    }
+    .shadow-sm {
+      box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08) !important;
+    }
+    .shadow-lg {
+      box-shadow: 0 8px 32px rgba(44, 62, 80, 0.15) !important;
+    }
+    .shadow-xl {
+      box-shadow: 0 12px 48px rgba(44, 62, 80, 0.16) !important;
+    }
+    .form-label {
+      font-weight: 600;
+    }
+    .form-select {
+      min-width: 180px;
+      background: #f8f9fa;
+      border: 2px solid #e3eafc;
+      box-shadow: 0 2px 8px rgba(44, 62, 80, 0.06);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-select:focus, .form-control:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15);
+      background: #fff;
+    }
+    .btn {
+      border-radius: 2rem !important;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(44, 62, 80, 0.10);
+      transition: box-shadow 0.2s, transform 0.1s;
+    }
+    .btn:active {
+      transform: scale(0.98);
+      box-shadow: 0 1px 4px rgba(44, 62, 80, 0.08);
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, #0d6efd 60%, #84b6f4 100%);
+      border: none;
+    }
+    .btn-outline-primary {
+      border: 2px solid #0d6efd;
+      color: #0d6efd;
+      background: transparent;
+    }
+    .btn-outline-primary:hover {
+      background: #0d6efd;
+      color: #fff;
+    }
+    .btn-outline-secondary {
+      border: 2px solid #6c757d;
+      color: #6c757d;
+      background: transparent;
+    }
+    .btn-outline-secondary:hover {
+      background: #6c757d;
+      color: #fff;
+    }
+    .btn-success {
+      background: #198754;
+      border: none;
+    }
+    .btn-danger {
+      background: #dc3545;
+      border: none;
+    }
+    .btn-warning {
+      background: #ffc107;
+      border: none;
+      color: #212529;
+    }
+    .btn-info {
+      background: #0dcaf0;
+      border: none;
+      color: #212529;
+    }
+    .btn:focus {
+      box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15);
+    }
+    .form-check-input:checked {
+      background-color: #0d6efd;
+      border-color: #0d6efd;
+    }
+    .form-check-input:focus {
+      box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15);
+    }
+    .form-check-label {
+      font-weight: 600;
+    }
+    .accordion-item {
+      border-radius: 2rem !important;
+    }
+    .accordion-body {
+      border-radius: 0 0 2rem 2rem !important;
+    }
+    .accordion-button {
+      border-radius: 2rem 2rem 0 0 !important;
+    }
+    .accordion-button:not(.collapsed) {
+      background: #f8f9fa;
+      color: #0d6efd;
+      font-weight: 700;
+    }
+    .accordion-button:focus {
+      box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15);
+    }
+    .accordion-button .badge {
+      font-size: 1.1rem;
+    }
+    .badge {
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+    }
+    .bg-gradient-info {
+      background: #e3eafc !important;
+      color: #212529 !important;
+    }
+    .modal-dialog-centered {
+      display: flex;
+      align-items: center;
+      min-height: calc(100% - 1rem);
+    }
+    .modal-lg {
+      max-width: 700px;
+    }
+    .rounded-circle {
+      border-radius: 50% !important;
+    }
+    .text-shadow {
+      text-shadow: 0 2px 8px #e3eafc;
+    }
+    .text-shadow-light {
+      text-shadow: 0 1px 2px #f8f9fa;
+    }
+
+    /* --- Lineup Picker Pro UX --- */
+    .lineup-picker-section {
+      background: linear-gradient(120deg, #f8f9fa 60%, #e3eafc 100%);
+      border-radius: 2rem;
+      box-shadow: 0 8px 32px rgba(44, 62, 80, 0.13) !important;
+      padding: 2rem 2.5rem 2.5rem 2.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid #e3eafc;
+      position: relative;
+      overflow: visible;
+    }
+    .lineup-picker-section .section-title {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #0d6efd;
+      margin-bottom: 1.5rem;
+      letter-spacing: -1px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .lineup-picker-section .section-title .bi {
+      font-size: 2rem;
+      color: #0d6efd;
+    }
+    .lineup-role-label {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #6c757d;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.02em;
+    }
+    .lineup-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+      border-radius: 1rem;
+      padding: 0.5rem 1rem;
+      transition: box-shadow 0.2s;
+    }
+    .lineup-row label {
+      min-width: 2.5rem;
+      font-size: 1.1rem;
+      color: #0d6efd;
+      font-weight: 700;
+      margin-bottom: 0;
+    }
+    .lineup-row select {
+      flex: 1;
+      background: #f8f9fa;
+      border: 2px solid blue;
+      border-radius: 0.75rem;
+      font-size: 1.1rem;
+      box-shadow: 0 1px 4px rgba(44, 62, 80, 0.04);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .lineup-row select:focus {
+      border-color: #0d6efd;
+      background: #fff;
+      box-shadow: 0 0 0 0.2rem rgba(13,110,253,.10);
+    }
+    .lineup-picker-section .btn-primary {
+      background: linear-gradient(90deg, #0d6efd 60%, #84b6f4 100%);
+      border: none;
+      box-shadow: 0 4px 18px rgba(13, 110, 253, 0.13);
+      font-size: 1.2rem;
+      padding: 0.75rem 2.5rem;
+      border-radius: 2rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-top: 1.5rem;
+      transition: box-shadow 0.2s, transform 0.1s;
+    }
+    .lineup-picker-section .btn-primary:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 8px rgba(13, 110, 253, 0.10);
+    }
+    .lineup-picker-section .btn-primary:focus {
+      box-shadow: 0 0 0 0.2rem rgba(13,110,253,.13);
+    }
+    .lineup-picker-section .form-label {
+      font-weight: 600;
+      color: #0d6efd;
+    }
+    .lineup-picker-section .form-select {
+      min-width: 180px;
+      background: #f8f9fa;
+      border: 2px solid #e3eafc;
+      box-shadow: 0 2px 8px rgba(44, 62, 80, 0.06);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .lineup-picker-section .form-select:focus {
+      border-color: #0d6efd;
+      background: #fff;
+      box-shadow: 0 0 0 0.2rem rgba(13,110,253,.10);
+    }
+    @media (max-width: 767px) {
+      .lineup-picker-section {
+        padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+      }
+      .lineup-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        padding: 0.5rem 0.5rem;
+      }
+    }
+
+  </style>
 </head>
-<h2>Game Hub: <%= @match.opponent_name %> - <%= @match.date.strftime("%b %d, %Y %H:%M") %></h2>
 
-<div id="score-or-countdown" class="mb-4">
-  <% if @match.has_happened %>
-    <p><strong>Score Line:</strong> <%= @match.score_own %> - <%= @match.score_opponent %></p>
-  <% else %>
-    <p><strong>Time to game:</strong> <span id="countdownTimer">Loading...</span></p>
-  <% end %>
-</div>
 
-<!-- Lineup Picker -->
-<div>
-  <h3>Lineup Picker</h3>
-  <%= form_with url: lineup_match_path(@match), method: :post, local: true do |f| %>
-    <p>Select 11 starters and 5 substitutes:</p>
-    <div class="row">
-      <div class="col-md-6">
-        <h5>Starters (11)</h5>
-        <% 11.times do |i| %>
-          <div class="mb-2">
-            <select name="lineup[starters][]" class="form-select" required>
-              <option value="">Select Player</option>
-              <% @team_players.each do |p| %>
-                <option value="<%= p.id %>" <%= @lineup_starters[i] == p.id ? 'selected' : '' %>><%= p.name %> (<%= p.email %>)</option>
-              <% end %>
-            </select>
-          </div>
-        <% end %>
+<div class="row mb-4" style="justify-content: center; display: flex;">
+  <div class="col-12" style="max-width: 600px; text-align: center; margin: 0 auto;">
+    <div class="card shadow-pro border-0 rounded-4" style="margin: 0 auto;">
+      <div class="card-header bg-primary text-white d-flex align-items-center rounded-top-4" style="justify-content: center;">
+        <i class="bi bi-trophy-fill me-2 fs-3"></i>
+        <h1 class="mb-0 fs-4 flex-grow-1 fw-bold" style="margin: 0;">
+          Game Hub: <%= @match.opponent_name %>
+          <span class="fs-6 text-light ms-2" style="display: inline-block; vertical-align: middle;">
+            <i class="bi bi-calendar-event"></i> <%= @match.date.strftime("%b %d, %Y %H:%M") %>
+          </span>
+        </h1>
+                <i class="bi bi-trophy-fill me-2 fs-3"></i>
+
       </div>
-
-      <div class="col-md-6">
-        <h5>Substitutes (5)</h5>
-        <% 5.times do |i| %>
-          <div class="mb-2">
-            <select name="lineup[substitutes][]" class="form-select" required>
-              <option value="">Select Player</option>
-              <% @team_players.each do |p| %>
-                <option value="<%= p.id %>" <%= @lineup_substitutes[i] == p.id ? 'selected' : '' %>><%= p.name %> (<%= p.email %>)</option>
-              <% end %>
-            </select>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
-    <%= f.submit "Save Lineup", class: "btn btn-primary mt-3" %>
-  <% end %>
-</div>
-
-<% if @match.has_happened %>
-  <!-- Scorers Picker -->
-  <div class="mt-4">
-    <h3>Assign Scorers</h3>
-    <%= form_with url: scorers_match_path(@match), method: :post, local: true do |f| %>
-      <div id="scorersContainer">
-        <p>Your Team Score: <%= @match.score_own %></p>
-        <% @match.score_own.times do |i| %>
-          <select name="scorers[player_ids][]" class="form-select mb-2" required>
-            <option value="">Select Scorer</option>
-            <% @team_players.each do |p| %>
-              <option value="<%= p.id %>" <%= @match.scorer_ids[i] == p.id ? 'selected' : '' %>><%= p.name %></option>
-            <% end %>
-          </select>
-        <% end %>
-      </div>
-      <%= f.submit "Save Scorers", class: "btn btn-primary" %>
-    <% end %>
-  </div>
-
-  <!-- Dick of the Day Picker -->
-  <div class="mt-4">
-    <h3>Dick of the Day</h3>
-    <button class="btn btn-warning" id="openDickModalBtn">Choose Dick of the Day</button>
-    <p id="dickResult" class="mt-2">
-      <% if @match.dick_of_the_day_player %>
-        <strong><%= @match.dick_of_the_day_player.name %></strong> - <%= @match.dick_of_the_day_item %>
-      <% else %>
-        No one chosen yet.
-      <% end %>
-    </p>
-  </div>
-
-  <!-- Dick Modal -->
-  <div class="modal fade" id="dickModal" tabindex="-1" aria-labelledby="dickModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content p-3">
-        <div class="modal-header">
-          <h5 class="modal-title" id="dickModalLabel">Spin the Wheel - Dick of the Day</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <%= form_with url: dick_of_the_day_match_path(@match), method: :post, local: true, id: 'dickForm' do |f| %>
-            <label for="dickPlayerSelect">Select Player:</label>
-            <select name="dick[player_id]" id="dickPlayerSelect" class="form-select mb-3" required>
-              <option value="">Select Player</option>
-              <% @team_players.each do |p| %>
-                <option value="<%= p.id %>"><%= p.name %></option>
-              <% end %>
-            </select>
-
-            <canvas id="dickWheelCanvas" width="400" height="400" style="display: block; margin: 0 auto;"></canvas>
-
-            <input type="hidden" name="dick[item]" id="dickItemInput">
-            <button type="button" id="spinWheelBtn" class="btn btn-danger" disabled>Spin the Wheel</button>
-            <div id="wheelResult" class="mt-3" style="font-weight:bold; font-size:1.2rem;"></div>
-            <%= f.submit "Save Result", class: "btn btn-success mt-3", id: "saveDickBtn", style: "display:none;" %>
+      <div class="card-body bg-white border rounded-bottom-4" style="text-align: center;">
+        <div id="score-or-countdown" class="mb-2">
+          <% if @match.has_happened? %>
+            <p class="mb-0 fs-5">
+              <span class="fw-semibold text-primary"><i class="bi bi-graph-up-arrow"></i> Score Line:</span>
+              <span class="badge bg-success ms-2 fs-5 px-3 py-2"><%= @match.score_own %></span>
+              <span class="mx-2 fs-5">-</span>
+              <span class="badge bg-danger fs-5 px-3 py-2"><%= @match.score_opponent %></span>
+            </p>
+          <% else %>
+            <p class="mb-0 fs-5">
+              <span class="fw-semibold text-primary"><i class="bi bi-clock-history"></i> Time to game:</span>
+              <span id="countdownTimer" class="badge bg-info ms-2 fs-5 px-3 py-2">Loading...</span>
+            </p>
           <% end %>
         </div>
       </div>
     </div>
   </div>
-<% else %>
-  <p class="mt-4 text-muted"><em>Dick of the Day feature unlocks after the match has happened.</em></p>
-<% end %>
+</div>
+
+  <!-- Lineup Picker -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="lineup-picker-section shadow-pro">
+        <div class="section-title mb-4">
+          <i class="bi bi-people-fill"></i>
+          Lineup Picker
+        </div>
+        <%= form_with url: lineup_match_path(@match), method: :post, local: true do |f| %>
+          <p class="mb-4 text-muted fs-5">
+            <i class="bi bi-info-circle"></i>
+            Select <span class="fw-bold">11 starters</span> and <span class="fw-bold">5 substitutes</span>:
+          </p>
+          <div class="row">
+            <!-- Starters -->
+            <div class="col-md-6 mb-3">
+              <div class="lineup-role-label mb-3 text-primary"><i class="bi bi-person-check-fill"></i> Starters (11)</div>
+              <% 11.times do |i| %>
+                <div class="lineup-row">
+                  <label class="form-label mb-0">#<%= i+1 %></label>
+                  <select name="lineup[starters][]" class="form-select form-select-lg rounded-3 shadow-sm border-primary" required>
+                    <option value="">Select Player</option>
+                    <% @team_players.each do |p| %>
+                      <option value="<%= p.id %>" <%= @lineup_starters[i] == p.id ? 'selected' : '' %>>
+                        <%= p.full_name %>
+                      </option>
+                    <% end %>
+                  </select>
+                </div>
+              <% end %>
+            </div>
+            <!-- Substitutes -->
+            <div class="col-md-6 mb-3">
+              <div class="lineup-role-label mb-3 text-secondary"><i class="bi bi-person-plus-fill"></i> Substitutes (5)</div>
+              <% 5.times do |i| %>
+                <div class="lineup-row">
+                  <label class="form-label mb-0">#<%= i+1 %></label>
+                  <select name="lineup[substitutes][]" class="form-select form-select-lg rounded-3 shadow-sm border-secondary" required>
+                    <option value="">Select Player</option>
+                    <% @team_players.each do |p| %>
+                      <option value="<%= p.id %>" <%= @lineup_substitutes[i] == p.id ? 'selected' : '' %>>
+                        <%= p.full_name %>
+                      </option>
+                    <% end %>
+                  </select>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <%= f.submit "Save Lineup", class: "btn btn-primary mt-3 px-4 shadow-sm fw-bold btn-lg" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <% if @match.has_happened? %>
+    <!-- Scorers Picker -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <div class="card shadow-lg border-0 rounded-4">
+          <div class="card-header bg-light d-flex align-items-center rounded-top-4">
+            <i class="bi bi-bullseye text-success me-2"></i>
+            <span class="fw-bold border-start border-success ps-2">Assign Scorers</span>
+          </div>
+          <div class="card-body rounded-bottom-4">
+            <%= form_with url: scorers_match_path(@match), method: :post, local: true do |f| %>
+              <div id="scorersContainer">
+                <p class="mb-3 fs-5">
+                  <i class="bi bi-trophy text-success"></i>
+                  Your Team Score:
+                  <span class="badge bg-success ms-2 fs-5 px-3 py-2"><%= @match.score_own %></span>
+                </p>
+                <% (@match.score_own || 0).times do |i| %>
+                  <select name="scorers[player_ids][]" class="form-select form-select-lg rounded-3 shadow-sm border-info mb-2" required>
+                    <option value="">Select Scorer</option>
+                    <% @team_players.each do |p| %>
+                      <option value="<%= p.id %>" <%= @match.scorer_ids[i] == p.id ? 'selected' : '' %>><%= p.full_name %></option>
+                    <% end %>
+                  </select>
+                <% end %>
+              </div>
+              <div class="d-flex justify-content-end">
+                <%= f.submit "Save Scorers", class: "btn btn-primary px-4 shadow-sm fw-bold btn-lg" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dick of the Day Picker -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <div class="card shadow-lg border-0 rounded-4">
+          <div class="card-header bg-light d-flex align-items-center rounded-top-4">
+            <i class="bi bi-emoji-dizzy text-warning me-2"></i>
+            <span class="fw-bold border-start border-warning ps-2">Dick of the Day</span>
+          </div>
+          <div class="card-body rounded-bottom-4">
+            <button class="btn btn-warning openDickModalBtn mb-3 shadow-sm btn-lg fw-bold px-5 rounded-pill">
+              <i class="bi bi-emoji-dizzy"></i> Choose Dick of the Day
+            </button>
+            <p id="dickResult" class="mt-2 fs-5">
+              <% if @match.dick_of_the_day_player && @match.dotd_punishment.present? %>
+                <strong class="text-danger"><%= @match.dick_of_the_day_player.full_name %></strong>
+                <span class="text-muted">- <%= @match.dotd_punishment %></span>
+              <% elsif @match.dick_of_the_day_player %>
+                <strong class="text-danger"><%= @match.dick_of_the_day_player.full_name %></strong>
+              <% else %>
+                <span class="text-muted">No one chosen yet.</span>
+              <% end %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Dick Modal -->
+    <div class="modal fade" id="dickModal" tabindex="-1" aria-labelledby="dickModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3 rounded-4 shadow-lg border-0">
+          <div class="modal-header border-0 bg-warning bg-gradient rounded-top-4">
+            <h5 class="modal-title fw-bold text-dark" id="dickModalLabel">
+              <i class="bi bi-emoji-dizzy"></i> Spin the Wheel - Dick of the Day
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <%= form_with url: dick_of_the_day_match_path(@match), method: :post, local: true, id: 'dickForm' do |f| %>
+              <div class="mb-3">
+                <label for="dickPlayerSelect" class="form-label">Select Player:</label>
+                <select name="dick[player_id]" id="dickPlayerSelect" class="form-select form-select-lg rounded-3 shadow-sm border-warning" required>
+                  <option value="">Select Player</option>
+                  <% @team_players.each do |p| %>
+                    <option value="<%= p.id %>"><%= p.full_name %></option>
+                  <% end %>
+                </select>
+              </div>
+              <div class="mb-3 text-center">
+                <canvas id="dickWheelCanvas" width="320" height="320" class="d-block mx-auto rounded-circle shadow"></canvas>
+              </div>
+              <input type="hidden" name="dick[item]" id="dickItemInput">
+              <div class="d-flex justify-content-center gap-2">
+                <button type="button" id="spinWheelBtn" class="btn btn-danger px-4 shadow-sm fw-bold btn-lg" disabled>
+                  <i class="bi bi-arrow-repeat"></i> Spin the Wheel
+                </button>
+                <%= f.submit "Save Result", class: "btn btn-success px-4 shadow-sm fw-bold btn-lg", id: "saveDickBtn", style: "display:none;" %>
+              </div>
+              <div id="wheelResult" class="mt-3 fw-bold fs-5 text-center"></div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="row">
+      <div class="col-12">
+        <div class="alert alert-info mt-4 text-center fs-5 rounded-4 shadow-sm" role="alert">
+          <i class="bi bi-lock-fill me-2"></i>
+          <em>Dick of the Day feature unlocks after the match has happened.</em>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<!-- Add New Match Modal -->
+<div class="modal fade" id="newMatchModal" tabindex="-1" aria-labelledby="newMatchModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow-lg border-0">
+      <%= form_with(model: Match.new, url: matches_path, local: true, id: "newMatchForm") do |f| %>
+        <div class="modal-header border-0 pb-0 bg-primary bg-gradient rounded-top-4">
+          <h5 class="modal-title fw-bold text-white" id="newMatchModalLabel">
+            <i class="bi bi-plus-circle me-2"></i>Add New Match
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body pt-4 px-5">
+          <div class="mb-4 form-check form-switch">
+            <%= f.check_box :has_happened, { class: "form-check-input", id: "matchHappenedCheckbox", role: "switch" }, "true", "false" %>
+            <%= f.label :has_happened, "Match has happened?", class: "form-check-label ms-2 fs-5", for: "matchHappenedCheckbox" %>
+          </div>
+          <div class="mb-4">
+            <%= f.label :opponent_name, "Opponent Team Name", class: "form-label fw-semibold fs-5" %>
+            <%= f.text_field :opponent_name, class: "form-control form-control-lg rounded-3 shadow-sm border-primary" %>
+          </div>
+          <div class="mb-4">
+            <%= f.label :date, "Match Date & Time", class: "form-label fw-semibold fs-5" %>
+            <%= f.datetime_local_field :date, class: "form-control form-control-lg rounded-3 shadow-sm border-primary", required: true %>
+          </div>
+          <div class="mb-4">
+            <%= f.label :location, "Location", class: "form-label fw-semibold fs-5" %>
+            <%= f.text_field :location, class: "form-control form-control-lg rounded-3 shadow-sm border-primary", required: true %>
+          </div>
+          <div id="happenedDetails" style="display:none;">
+            <div class="mb-4">
+              <%= f.label :score_own, "Your Team Score", class: "form-label fw-semibold fs-5" %>
+              <%= f.number_field :score_own, class: "form-control form-control-lg rounded-3 shadow-sm border-success", min: 0, value: 0, id: "scoreOwnInput" %>
+            </div>
+            <div class="mb-4">
+              <%= f.label :score_opponent, "Opponent Score", class: "form-label fw-semibold fs-5" %>
+              <%= f.number_field :score_opponent, class: "form-control form-control-lg rounded-3 shadow-sm border-danger", min: 0, value: 0 %>
+            </div>
+            <div id="scorersContainer" class="mb-4">
+              <label class="form-label fw-semibold fs-5">Your Team Scorers</label>
+              <div id="scorersSelectors"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-0 pt-0 bg-light rounded-bottom-4">
+          <button type="button" class="btn btn-outline-secondary btn-lg px-4 rounded-pill" data-bs-dismiss="modal">Close</button>
+          <%= f.submit "Create Match", class: "btn btn-primary btn-lg px-4 rounded-pill shadow-sm fw-bold" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
 
 <script src="/assets/controllers/Winwheel.js"></script>
-
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  // --- Countdown Timer (only if match not happened) ---
-  <% unless @match.has_happened %>
-  function countdown() {
-    const targetDate = new Date("<%= @match.date.iso8601 %>");
-    const now = new Date();
-    let diff = targetDate - now;
+  <% if defined?(@match) && !@match.has_happened? %>
+    function countdown() {
+      const targetDate = new Date("<%= @match.date.iso8601 %>");
+      const now = new Date();
+      let diff = targetDate - now;
 
-    if (diff <= 0) {
-      document.getElementById("countdownTimer").textContent = "Game time!";
-      return;
+      if (diff <= 0) {
+        const timer = document.getElementById("countdownTimer");
+        if (timer) timer.textContent = "Game time!";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      diff -= days * (1000 * 60 * 60 * 24);
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      diff -= hours * (1000 * 60 * 60);
+
+      const minutes = Math.floor(diff / (1000 * 60));
+      diff -= minutes * (1000 * 60);
+
+      const seconds = Math.floor(diff / 1000);
+
+      const timer = document.getElementById("countdownTimer");
+      if (timer) timer.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+      setTimeout(countdown, 1000);
     }
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    diff -= days * (1000 * 60 * 60 * 24);
-
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    diff -= hours * (1000 * 60 * 60);
-
-    const minutes = Math.floor(diff / (1000 * 60));
-    diff -= minutes * (1000 * 60);
-
-    const seconds = Math.floor(diff / 1000);
-
-    document.getElementById("countdownTimer").textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-    setTimeout(countdown, 1000);
-  }
-  countdown();
+    countdown();
   <% end %>
 
-  // --- Modal & UI Elements ---
   const dickPlayerSelect = document.getElementById("dickPlayerSelect");
   const spinWheelBtn = document.getElementById("spinWheelBtn");
   const wheelResult = document.getElementById("wheelResult");
   const dickItemInput = document.getElementById("dickItemInput");
   const saveDickBtn = document.getElementById("saveDickBtn");
-  const dickModalElement = document.getElementById('dickModal');
-  let dickModal;
+  const dickModalElement = document.getElementById("dickModal");
 
-  if (dickModalElement) {
-    dickModal = new bootstrap.Modal(dickModalElement);
-  }
+  const dickModal = new bootstrap.Modal(dickModalElement);
 
-  document.getElementById("openDickModalBtn")?.addEventListener("click", () => {
-    wheelResult.textContent = "";
-    dickItemInput.value = "";
-    if (dickPlayerSelect) dickPlayerSelect.value = "";
-    if (spinWheelBtn) spinWheelBtn.disabled = true;
-    if (saveDickBtn) saveDickBtn.style.display = "none";
-    dickModal?.show();
-  });
-
-  dickPlayerSelect?.addEventListener("change", () => {
-    if (spinWheelBtn) spinWheelBtn.disabled = !dickPlayerSelect.value;
-    wheelResult.textContent = "";
-    dickItemInput.value = "";
-    if (saveDickBtn) saveDickBtn.style.display = "none";
-  });
-
-  // --- Winwheel Setup ---
-  const items = <%= @spin_wheel_items.to_json.html_safe %>;
-  let theWheel = null;
-
-  function getRandomColor() {
-    return '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
-  }
-
-  if (!items || !Array.isArray(items) || items.length === 0) {
-    console.error("Spin wheel items array is empty or invalid:", items);
-  } else {
-    function createWheel(items) {
-      const segments = items.map(item => ({ fillStyle: getRandomColor(), text: item }));
-      theWheel = new Winwheel({
-        'canvasId': 'dickWheelCanvas',
-        'numSegments': items.length,
-        'segments': segments,
-        'animation': {
-          'type': 'spinToStop',
-          'duration': 5,
-          'spins': 8,
-          'callbackFinished': alertPrize
-        }
-      });
-    }
-
-    function alertPrize(indicatedSegment) {
-      const pickedItem = indicatedSegment.text;
-      const playerName = dickPlayerSelect?.options[dickPlayerSelect.selectedIndex]?.text || "Player";
-
-      if (wheelResult) wheelResult.textContent = `${playerName} has to ${pickedItem}`;
-      if (dickItemInput) dickItemInput.value = pickedItem;
-      if (saveDickBtn) saveDickBtn.style.display = "inline-block";
-    }
-
-    createWheel(items);
-
-    spinWheelBtn?.addEventListener("click", () => {
-      if (theWheel) {
-        theWheel.stopAnimation(false);
-        theWheel.rotationAngle = 0;
-        theWheel.startAnimation();
-        if (saveDickBtn) saveDickBtn.style.display = "none";
-        wheelResult.textContent = "";
-        dickItemInput.value = "";
-      }
+  document.querySelectorAll(".openDickModalBtn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      wheelResult.textContent = "";
+      dickItemInput.value = "";
+      dickPlayerSelect.value = "";
+      spinWheelBtn.disabled = true;
+      saveDickBtn.style.display = "none";
+      dickModal.show();
     });
+  });
+
+  dickPlayerSelect.addEventListener("change", () => {
+    spinWheelBtn.disabled = !dickPlayerSelect.value;
+    wheelResult.textContent = "";
+    dickItemInput.value = "";
+    saveDickBtn.style.display = "none";
+  });
+
+  const wheel = new Winwheel({
+    canvasId: 'dickWheelCanvas',
+    numSegments: 8,
+    segments: [
+      { fillStyle: '#ff6961', text: 'Forgetting Kit' },
+      { fillStyle: '#fdfd96', text: 'Late Arrival' },
+      { fillStyle: '#77dd77', text: 'Own Goal' },
+      { fillStyle: '#84b6f4', text: 'Missing Sitter' },
+      { fillStyle: '#fdcae1', text: 'Yellow Card' },
+      { fillStyle: '#cbaacb', text: 'Drunk Performance' },
+      { fillStyle: '#ffb347', text: 'Moaner of the Match' },
+      { fillStyle: '#aec6cf', text: 'Slip & Fall' }
+    ],
+    animation: {
+      type: 'spinToStop',
+      duration: 5,
+      spins: 8,
+      callbackFinished: (indicatedSegment) => {
+        wheelResult.textContent = `Result: ${indicatedSegment.text}`;
+        dickItemInput.value = indicatedSegment.text;
+        saveDickBtn.style.display = "inline-block";
+      }
+    }
+  });
+
+  spinWheelBtn.addEventListener("click", () => {
+    wheel.stopAnimation(false);
+    wheel.rotationAngle = 0;
+    wheel.draw();
+    wheel.startAnimation();
+  });
+});
+
+// New Match Modal JS
+document.addEventListener("DOMContentLoaded", function () {
+  const checkbox = document.getElementById("matchHappenedCheckbox");
+  const happenedDetails = document.getElementById("happenedDetails");
+  const scoreInput = document.getElementById("scoreOwnInput");
+  const scorersSelectors = document.getElementById("scorersSelectors");
+  const players = <%= raw(@team_players.to_json(only: [:id, :name, :full_name])) %>;
+
+  function updateScorerSelectors() {
+    const score = parseInt(scoreInput.value) || 0;
+    scorersSelectors.innerHTML = "";
+    for (let i = 0; i < score; i++) {
+      const div = document.createElement("div");
+      div.className = "mb-2";
+      const select = document.createElement("select");
+      select.full_name = `match[scorers_attributes][${i}][player_id]`;
+      select.className = "form-select form-select-lg rounded-3 shadow-sm border-info";
+      select.required = true;
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.textContent = "Select Scorer";
+      defaultOption.disabled = true;
+      defaultOption.selected = true;
+      select.appendChild(defaultOption);
+      players.forEach(player => {
+        const option = document.createElement("option");
+        option.value = player.id;
+        option.textContent = `${player.full_name} (${player.full_name})`;
+        select.appendChild(option);
+      });
+      div.appendChild(select);
+      scorersSelectors.appendChild(div);
+    }
+  }
+
+  checkbox.addEventListener("change", function () {
+    if (checkbox.checked) {
+      happenedDetails.style.display = "block";
+      scoreInput.value = 1;
+      scoreInput.dispatchEvent(new Event('input'));
+    } else {
+      happenedDetails.style.display = "none";
+      scorersSelectors.innerHTML = "";
+    }
+  });
+
+  scoreInput.addEventListener("input", updateScorerSelectors);
+  scoreInput.addEventListener("change", updateScorerSelectors);
+
+  if (checkbox.checked) {
+    happenedDetails.style.display = "block";
+    updateScorerSelectors();
+  } else {
+    happenedDetails.style.display = "none";
   }
 });
 </script>

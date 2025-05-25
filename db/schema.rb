@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_24_201320) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_25_131004) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -61,7 +61,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_24_201320) do
     t.integer "assists"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "team_id", null: false
     t.index ["match_id"], name: "index_match_players_on_match_id"
+    t.index ["team_id"], name: "index_match_players_on_team_id"
     t.index ["user_id"], name: "index_match_players_on_user_id"
   end
 
@@ -112,6 +114,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_24_201320) do
     t.datetime "updated_at", null: false
     t.string "role"
     t.bigint "team_id", null: false
+    t.string "first_name"
+    t.string "last_name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["team_id"], name: "index_users_on_team_id"
@@ -122,6 +126,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_24_201320) do
   add_foreign_key "awards", "matches"
   add_foreign_key "awards", "users"
   add_foreign_key "match_players", "matches"
+  add_foreign_key "match_players", "teams"
   add_foreign_key "match_players", "users"
   add_foreign_key "matches", "teams"
   add_foreign_key "payments", "teams"

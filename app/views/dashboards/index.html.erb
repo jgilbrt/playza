@@ -1,103 +1,190 @@
-<div class="p-6 max-w-7xl mx-auto space-y-6">
-
-  <!-- Row 1, Col 1 -->
-  <div class="bg-white rounded shadow p-4 mb-4">
-    <h2 class="fs-4 fw-semibold mb-2">👋 Hello Manager!</h2>
-    <% if @next_match %>
-      <p class="mb-1">
-        Your next match is in <span class="fw-bold"><%= distance_of_time_in_words(Date.today, @next_match.date) %></span>
-        vs <span class="fw-bold"><%= @next_match.opponent_name %></span>.
-      </p>
-    <% else %>
-      <p>No upcoming matches scheduled.</p>
-    <% end %>
-
-    <p class="mb-3">
-      You currently have <span class="fw-bold"><%= current_user.team.users.count %></span> players.
-    </p>
-    <%= link_to "Go to MatchHub", matches_path, class: "btn btn-success rounded-pill fw-semibold px-4 py-2" %>
-  </div>
-
-  <!-- Row 2: 3 Columns -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-<div class="bg-white rounded shadow p-4 mb-4">
-  <h3 class="fs-5 fw-semibold mb-3">Last Match</h3>
-  <% if @last_match %>
-    <% if @last_match.score_own && @last_match.score_opponent %>
-      <% result = if @last_match.score_own > @last_match.score_opponent
-                    "beat"
-                  elsif @last_match.score_own == @last_match.score_opponent
-                    "drew with"
-                  else
-                    "lost to"
-                  end %>
-      <p>
-        You <span class="fw-bold text-<%= result == 'beat' ? 'success' : 'danger' %>"><%= result %></span>
-        <%= @last_match.opponent_name %> by <span class="fw-bold"><%= @last_match.score_own %>-<%= @last_match.score_opponent %></span>
-      </p>
-    <% else %>
-      <p>Score not available yet for the last match vs <%= @last_match.opponent_name %>.</p>
-    <% end %>
-
-<p>
-  Dick of the Day:
-  <% dotd_user = @last_match.awards.find_by(award_type: "dotd")&.user %>
-  <% if dotd_user %>
-    <span class="fw-bold"><%= dotd_user.email %></span>
-  <% else %>
-    <span class="text-warning fw-semibold">Not assigned yet.</span>
-    <%= link_to "Spin now!", match_path(@last_match), class: "btn btn-sm btn-outline-warning ms-2" %>
-  <% end %>
-</p>
-
-<p>
-  Player of the Match:
-  <% potm_user = @last_match.awards.find_by(award_type: "potm")&.user %>
-  <% if potm_user %>
-    <span class="fw-bold"><%= potm_user.email %></span>
-  <% else %>
-    <span class="text-warning fw-semibold">Not assigned yet.</span>
-    <%= link_to "Assign now", match_path(@last_match), class: "btn btn-sm btn-outline-warning ms-2" %>
-  <% end %>
-</p>
-
-    <p class="mt-3 fw-semibold">Payment Summary:</p>
-    <p><%= @paid_count %> paid, <%= @unpaid_count %> unpaid</p>
-    <%= link_to "View Match", match_path(@last_match), class: "btn btn-success rounded-pill fw-semibold mt-3 px-4 py-2" %>
-  <% else %>
-    <p>No matches played yet.</p>
-  <% end %>
-</div>
-
-    <!-- Col 2: Overview -->
-    <div class="bg-white rounded shadow p-4 mb-4">
-      <h3 class="fs-5 fw-semibold mb-3">Overview</h3>
-      <ul class="ps-3 mb-0">
-        <li>Wins: <span class="fw-bold"><%= @wins %></span></li>
-        <li>Draws: <span class="fw-bold"><%= @draws %></span></li>
-        <li>Losses: <span class="fw-bold"><%= @losses %></span></li>
-        <li>Goals scored: <span class="fw-bold"><%= @goals_scored %></span></li>
-        <li>Star Player (most POTMs): <span class="fw-bold"><%= @star_player&.email || "N/A" %></span></li>
-        <li>Top Scorer (most goals): <span class="fw-bold"><%= @top_scorer&.email || "N/A" %></span></li>
-        <li>Biggest Dick (most DOTDs): <span class="fw-bold"><%= @top_dick&.email || "N/A" %></span></li>
-      </ul>
-    </div>
-
-    <!-- Col 3: Wall of Shame -->
-    <div class="bg-white rounded shadow p-4 mb-4">
-      <h3 class="fs-5 fw-semibold mb-3">Wall of Shame</h3>
-      <% if @players_owing.any? %>
-        <ul class="ps-3 mb-3">
-          <% @players_owing.each do |player| %>
-            <li><%= player.email %> owes £<%= player.amount_owed %></li>
+<div class="container py-5">
+  <!-- Welcome Section -->
+  <div class="row mb-4 ">
+    <div class="col-12 ">
+      <div class="card shadow-lg border-0 rounded-4 ">
+        <div class="card-body p-5">
+          <h2 class="card-title fs-3 fw-bold mb-3 text-gradient">👋 Hello Manager!</h2>
+          <% if @next_match %>
+            <p class="mb-2 fs-5">
+              Your next match is in
+              <span class="fw-bold text-primary-emphasis">
+                <%= distance_of_time_in_words(Time.current, @next_match.date, include_seconds: true) %>
+              </span>
+              vs <span class="fw-bold text-dark"><%= @next_match.opponent_name %></span>.
+            </p>
+          <% else %>
+            <p class="text-muted mb-2 fs-5">No upcoming matches scheduled.</p>
           <% end %>
-        </ul>
-      <% else %>
-        <p>No outstanding payments.</p>
-      <% end %>
-      <%= link_to "Go to PaymentsHub", payments_path, class: "btn btn-danger rounded-pill fw-semibold px-4 py-2" %>
+          <p class="mb-3 fs-5">
+            You currently have <span class="fw-bold text-success-emphasis"><%= current_user.team.users.count %></span> players.
+          </p>
+          <%= link_to matches_path, class: "btn btn-success rounded-pill fw-semibold px-4 py-2 shadow-sm" do %>
+            <i class="bi bi-calendar-event me-2"></i>Go to MatchHub
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Cards -->
+  <div class="row g-4">
+
+    <!-- Last Match -->
+    <div class="col-12 col-md-4">
+      <div class="card shadow-lg border-0 h-100 rounded-4 bg-white">
+        <div class="card-body p-4 d-flex flex-column">
+          <h3 class="card-title fs-5 fw-bold mb-4 text-primary text-center">Last Match</h3>
+
+          <% if @last_match %>
+            <% if @last_match.score_own && @last_match.score_opponent %>
+              <% result = if @last_match.score_own > @last_match.score_opponent
+                            "beat"
+                          elsif @last_match.score_own == @last_match.score_opponent
+                            "drew with"
+                          else
+                            "lost to"
+                          end %>
+              <% result_color = case result
+                when "beat" then "success"
+                when "lost to" then "danger"
+                else "secondary"
+              end %>
+
+              <div class="mb-4 p-3 bg-light rounded-3 text-center shadow-sm">
+                <p class="mb-1 fs-6 text-muted">Result</p>
+                <p class="fs-5">
+                  You <span class="fw-bold text-<%= result_color %>"><%= result %></span>
+                  <span class="fw-semibold"><%= @last_match.opponent_name %></span>
+                  <span class="fw-bold"><%= @last_match.score_own %> - <%= @last_match.score_opponent %></span>
+                </p>
+              </div>
+            <% else %>
+              <p class="text-center text-muted fst-italic mb-4">
+                Add score vs <%= @last_match.opponent_name %>
+              </p>
+            <% end %>
+
+            <!-- Dick of the Day -->
+            <div class="mb-4 text-center border rounded-3 py-3">
+              <h6 class="fw-semibold text-danger mb-2">DOTD</h6>
+              <% dotd_player = @last_match.dick_of_the_day_player %>
+              <% punishment = @last_match.dotd_punishment %>
+              <% if dotd_player && punishment.present? %>
+                <p class="mb-1 fw-bold"><%= dotd_player.full_name %></p>
+                <small class="text-muted fst-italic">Punishment: <%= punishment %></small>
+              <% elsif dotd_player %>
+                <p class="fw-bold mb-0"><%= dotd_player.full_name %></p>
+              <% else %>
+                <p class="text-warning fw-semibold mb-2">Not assigned yet.</p>
+                <%= link_to "Spin now!", match_path(@last_match), class: "btn btn-outline-warning btn-sm rounded-pill px-4" %>
+              <% end %>
+            </div>
+
+            <!-- Player of the Match -->
+            <div class="mb-4 text-center border rounded-3 py-3 bg-light">
+              <h6 class="fw-semibold text-primary mb-2">POTM</h6>
+              <% potm_user = @last_match.awards.find_by(award_type: "potm")&.user %>
+              <% if potm_user %>
+                <p class="fw-bold mb-0"><%= potm_user.name || potm_user.full_name %></p>
+              <% else %>
+                <p class="text-warning fw-semibold mb-2">Not assigned yet.</p>
+                <%= link_to "Assign now", match_path(@last_match), class: "btn btn-outline-warning btn-sm rounded-pill px-4" %>
+              <% end %>
+            </div>
+
+            <!-- Payments Summary -->
+            <div class="mt-auto text-center">
+              <h5 class="fw-semibold mb-3">Payment Summary</h5>
+              <p class="mb-3 fs-6">
+                <span class="text-success fw-semibold"><%= @paid_count %> paid</span>,
+                <span class="text-danger fw-semibold"><%= @unpaid_count %> unpaid</span>
+              </p>
+              <%= link_to "View Match", match_path(@last_match), class: "btn btn-success rounded-pill fw-semibold px-5 py-2 shadow-sm" %>
+            </div>
+
+          <% else %>
+            <p class="text-muted text-center mb-0">No matches played yet.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview -->
+    <div class="col-12 col-md-4">
+      <div class="card shadow-lg border-0 h-100 rounded-4 bg-white">
+        <div class="card-body p-4">
+          <h3 class="card-title fs-5 fw-bold mb-3 text-primary">Overview</h3>
+          <ul class="list-group list-group-flush mb-0 rounded-3 overflow-hidden">
+            <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+              Wins: <span class="fw-bold text-success"><%= @wins %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Draws: <span class="fw-bold text-secondary"><%= @draws %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+              Losses: <span class="fw-bold text-danger"><%= @losses %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Goals scored: <span class="fw-bold"><%= @goals_scored %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+              Star Player: <span class="fw-bold text-primary"><%= @star_player&.full_name || "N/A" %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Top Scorer: <span class="fw-bold text-success"><%= @top_scorer&.full_name || "N/A" %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+              Biggest Dick: <span class="fw-bold text-danger"><%= @top_dick&.full_name || "N/A" %></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wall of Shame -->
+    <div class="col-12 col-md-4">
+      <div class="card shadow-lg h-100 rounded-4 bg-white"> <!-- removed border-0 -->
+        <div class="card-body p-4">
+          <h3 class="card-title fs-5 fw-bold mb-3 text-danger text-center">Wall of Shame</h3>
+          <% if @players_owing&.any? %>
+            <ul class="list-group mb-3 rounded-3 overflow-hidden">
+              <% @players_owing.each_with_index do |player, index| %>
+                <li class="list-group-item d-flex justify-content-between align-items-center <%= index.even? ? 'bg-light' : '' %> text-nowrap">
+                  <span><%= player.full_name %></span>
+                  <span class="badge bg-danger rounded-pill fs-6">£<%= player.amount_owed %></span>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="text-muted mb-3 text-center">No outstanding payments.</p>
+          <% end %>
+          <%= link_to payments_path, class: "btn btn-danger rounded-pill fw-semibold px-4 py-2 shadow-sm d-block mx-auto" do %>
+            <i class="bi bi-cash-coin me-2"></i>Go to PaymentsHub
+          <% end %>
+        </div>
+      </div>
     </div>
 
   </div>
 </div>
+
+<!-- Responsive Mobile Styling -->
+<style>
+@media (max-width: 90vw) {
+  .row.g-4 > [class^="col-"] {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+
+  .card-body.p-4 {
+    padding: 1rem !important;
+  }
+
+  .row.g-4 > [class^="col-"] {
+    margin-bottom: 1.5rem;
+  }
+}
+
+</style>
